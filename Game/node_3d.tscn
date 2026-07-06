@@ -1,0 +1,86 @@
+[gd_scene format=3 uid="uid://bqbnalrinjjmh"]
+
+[ext_resource type="Script" uid="uid://ca5e0qrktncp0" path="res://Game/playerMovement.gd" id="2_xh10m"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2x3h7"]
+size = Vector3(2, 0.05, 2)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_litse"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xh10m"]
+albedo_color = Color(0.277997, 0.33224937, 0, 0.6392157)
+albedo_texture = SubResource("PlaceholderTexture2D_litse")
+uv1_scale = Vector3(20.755, 20.755, 20.755)
+texture_filter = 0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_cbi2t"]
+material = SubResource("StandardMaterial3D_xh10m")
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_0jfuq"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kn0fm"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cbi2t"]
+sky_horizon_color = Color(0.79186434, 0.67989033, 0.47389585, 1)
+sky_curve = 0.0045278016
+sky_energy_multiplier = 0.7
+
+[sub_resource type="Sky" id="Sky_kn0fm"]
+sky_material = SubResource("ProceduralSkyMaterial_cbi2t")
+
+[sub_resource type="Environment" id="Environment_0jfuq"]
+background_mode = 2
+background_energy_multiplier = 3.2
+sky = SubResource("Sky_kn0fm")
+
+[node name="Node3D" type="Node3D" unique_id=973620551]
+
+[node name="Plane" type="Node3D" parent="." unique_id=1627250394]
+transform = Transform3D(25.42276, 0, 0, 0, 1, 0, 0, 0, 27.676176, 0, 0, 0)
+metadata/_edit_group_ = true
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Plane" unique_id=1199892928]
+transform = Transform3D(10.035, 0, 0, 0, 10.035, 0, 0, 0, 10.035, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Plane/StaticBody3D" unique_id=1789580429]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.009, -0.025, -0.003)
+shape = SubResource("BoxShape3D_2x3h7")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Plane/StaticBody3D" unique_id=862704525]
+mesh = SubResource("PlaneMesh_cbi2t")
+
+[node name="Player" type="Node3D" parent="." unique_id=2072259388]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3052027, 1.7440975)
+metadata/_edit_group_ = true
+
+[node name="RigidBody3D" type="RigidBody3D" parent="Player" unique_id=602719379 node_paths=PackedStringArray("camera")]
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+script = ExtResource("2_xh10m")
+SENSITIVTY = 0.005
+camera = NodePath("PlayerView")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player/RigidBody3D" unique_id=2139064305]
+layers = 512
+mesh = SubResource("CapsuleMesh_0jfuq")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player/RigidBody3D" unique_id=1134784364]
+shape = SubResource("CapsuleShape3D_kn0fm")
+
+[node name="PlayerView" type="Camera3D" parent="Player/RigidBody3D" unique_id=257419934]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+cull_mask = 1048063
+current = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=803477523]
+environment = SubResource("Environment_0jfuq")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=398535546]
+transform = Transform3D(1, 0, 0, 0, 0.9454321, 0.3258192, 0, -0.3258192, 0.9454321, 0, 2.762557, 7.355833)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=743438317]
+transform = Transform3D(1, 0, 0, 0, 0.00036163727, 0.99999994, 0, -0.99999994, 0.00036163727, 0, 6.980502, 0)
+light_energy = 10.195
+shadow_enabled = true
+spot_range = 8.572
