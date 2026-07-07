@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://cmqy4kxuo8myr"]
+
+[ext_resource type="Texture2D" uid="uid://p1s0h6h3ovs" path="res://Game/hlcross.png" id="1_urnas"]
+
+[node name="CanvasLayer" type="CanvasLayer" unique_id=425049810]
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1342345655]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -5.0
+offset_top = -5.0
+offset_right = 13.0
+offset_bottom = 13.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.5, 0.5)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("1_urnas")

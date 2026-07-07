@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://bqbnalrinjjmh"]
 
+[ext_resource type="PackedScene" uid="uid://cmqy4kxuo8myr" path="res://Game/Hud.tscn" id="2_vm3q4"]
 [ext_resource type="Script" uid="uid://ca5e0qrktncp0" path="res://Game/playerMovement.gd" id="2_xh10m"]
+[ext_resource type="ArrayMesh" uid="uid://c03ovpsyc3blr" path="res://Game/freight1.mtl.obj" id="3_vm3q4"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2x3h7"]
 size = Vector3(2, 0.05, 2)
@@ -20,10 +22,15 @@ material = SubResource("StandardMaterial3D_xh10m")
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kn0fm"]
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_litse"]
+height = 1.0098877
+
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cbi2t"]
-sky_horizon_color = Color(0.79186434, 0.67989033, 0.47389585, 1)
-sky_curve = 0.0045278016
-sky_energy_multiplier = 0.7
+sky_curve = 0.011148761
+ground_horizon_color = Color(0.7573033, 0.6270665, 0.51364034, 1)
+ground_curve = 0.04924579
+sun_angle_max = 19.45
+sun_curve = 0.05683976
 
 [sub_resource type="Sky" id="Sky_kn0fm"]
 sky_material = SubResource("ProceduralSkyMaterial_cbi2t")
@@ -32,6 +39,9 @@ sky_material = SubResource("ProceduralSkyMaterial_cbi2t")
 background_mode = 2
 background_energy_multiplier = 3.2
 sky = SubResource("Sky_kn0fm")
+ssao_enabled = true
+sdfgi_use_occlusion = true
+glow_enabled = true
 
 [node name="Node3D" type="Node3D" unique_id=973620551]
 
@@ -53,34 +63,56 @@ mesh = SubResource("PlaneMesh_cbi2t")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3052027, 1.7440975)
 metadata/_edit_group_ = true
 
-[node name="RigidBody3D" type="RigidBody3D" parent="Player" unique_id=602719379 node_paths=PackedStringArray("camera")]
+[node name="RigidBody3D" type="RigidBody3D" parent="Player" unique_id=602719379 node_paths=PackedStringArray("camera", "groundCast", "standCollide", "crouchCollide")]
+physics_interpolation_mode = 1
 axis_lock_angular_x = true
 axis_lock_angular_y = true
 axis_lock_angular_z = true
+gravity_scale = 1.5
 script = ExtResource("2_xh10m")
-SENSITIVTY = 0.005
+SENSITIVTY = 0.003
+ACCELERATION = 10.0
+MAX_SPEED = 15.0
+AIR_ACCEL = 1.0
+FRICTION = 8.0
+JUMP_POWER = 5.0
 camera = NodePath("PlayerView")
+groundCast = NodePath("GroundCast")
+standCollide = NodePath("Standing")
+crouchCollide = NodePath("Crouching")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Player/RigidBody3D" unique_id=2139064305]
 layers = 512
 mesh = SubResource("CapsuleMesh_0jfuq")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Player/RigidBody3D" unique_id=1134784364]
+[node name="Standing" type="CollisionShape3D" parent="Player/RigidBody3D" unique_id=1134784364]
 shape = SubResource("CapsuleShape3D_kn0fm")
+
+[node name="Crouching" type="CollisionShape3D" parent="Player/RigidBody3D" unique_id=1344202032]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.49957275, 0)
+shape = SubResource("CapsuleShape3D_litse")
 
 [node name="PlayerView" type="Camera3D" parent="Player/RigidBody3D" unique_id=257419934]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 cull_mask = 1048063
 current = true
 
+[node name="CanvasLayer" parent="Player/RigidBody3D/PlayerView" unique_id=425049810 instance=ExtResource("2_vm3q4")]
+
+[node name="GroundCast" type="RayCast3D" parent="Player/RigidBody3D" unique_id=1572890444]
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=803477523]
 environment = SubResource("Environment_0jfuq")
 
-[node name="Camera3D" type="Camera3D" parent="." unique_id=398535546]
-transform = Transform3D(1, 0, 0, 0, 0.9454321, 0.3258192, 0, -0.3258192, 0.9454321, 0, 2.762557, 7.355833)
-
-[node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=743438317]
-transform = Transform3D(1, 0, 0, 0, 0.00036163727, 0.99999994, 0, -0.99999994, 0.00036163727, 0, 6.980502, 0)
-light_energy = 10.195
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment" unique_id=47027143]
+transform = Transform3D(1, 0, 0, 0, -0.49798748, 0.8671842, 0, -0.8671842, -0.49798748, 0, 4.742984, 0)
+light_color = Color(0.9999996, 0.959454, 0.725681, 1)
+light_energy = 4.985
 shadow_enabled = true
-spot_range = 8.572
+shadow_blur = 4.519
+
+[node name="structure" type="Node3D" parent="." unique_id=500818264]
+
+[node name="Freight1_mtl" type="MeshInstance3D" parent="." unique_id=548515745]
+transform = Transform3D(2.5775003, 0, 1.2622968, 0, 2.8700001, 0, -1.2622968, 0, 2.5775003, 9.5051775, 3.8550262, 14.7185545)
+mesh = ExtResource("3_vm3q4")
