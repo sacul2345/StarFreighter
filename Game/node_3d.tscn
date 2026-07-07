@@ -43,6 +43,13 @@ ssao_enabled = true
 sdfgi_use_occlusion = true
 glow_enabled = true
 
+[sub_resource type="BoxMesh" id="BoxMesh_0jfuq"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0jfuq"]
+albedo_color = Color(0.30692267, 0.3069227, 0.3069227, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kn0fm"]
+
 [node name="Node3D" type="Node3D" unique_id=973620551]
 
 [node name="Plane" type="Node3D" parent="." unique_id=1627250394]
@@ -82,10 +89,12 @@ standCollide = NodePath("Standing")
 crouchCollide = NodePath("Crouching")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Player/RigidBody3D" unique_id=2139064305]
+visible = false
 layers = 512
 mesh = SubResource("CapsuleMesh_0jfuq")
 
 [node name="Standing" type="CollisionShape3D" parent="Player/RigidBody3D" unique_id=1134784364]
+visible = false
 shape = SubResource("CapsuleShape3D_kn0fm")
 
 [node name="Crouching" type="CollisionShape3D" parent="Player/RigidBody3D" unique_id=1344202032]
@@ -100,6 +109,8 @@ current = true
 [node name="CanvasLayer" parent="Player/RigidBody3D/PlayerView" unique_id=425049810 instance=ExtResource("2_vm3q4")]
 
 [node name="GroundCast" type="RayCast3D" parent="Player/RigidBody3D" unique_id=1572890444]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+target_position = Vector3(0, -2, 0)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=803477523]
 environment = SubResource("Environment_0jfuq")
@@ -111,8 +122,28 @@ light_energy = 4.985
 shadow_enabled = true
 shadow_blur = 4.519
 
-[node name="structure" type="Node3D" parent="." unique_id=500818264]
+[node name="structures" type="Node3D" parent="." unique_id=500818264]
 
-[node name="Freight1_mtl" type="MeshInstance3D" parent="." unique_id=548515745]
+[node name="StaticBody3D" type="StaticBody3D" parent="structures" unique_id=119621484]
+transform = Transform3D(3.4838827, -0.8329596, 0, -4.4467993, -0.65258926, 0, 0, 0, 12.722083, -4.6433554, 1.2256439, -26.163136)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="structures/StaticBody3D" unique_id=2032816252]
+mesh = SubResource("BoxMesh_0jfuq")
+surface_material_override/0 = SubResource("StandardMaterial3D_0jfuq")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="structures/StaticBody3D" unique_id=716900663]
+shape = SubResource("BoxShape3D_kn0fm")
+
+[node name="StaticBody3D2" type="StaticBody3D" parent="structures" unique_id=1658482156]
+transform = Transform3D(5.1896653, -0.41796505, 0, -2.2313285, -0.97211087, 0, 0, 0, 12.722082, -4.6433554, 0.48848557, -40.45366)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="structures/StaticBody3D2" unique_id=155776178]
+mesh = SubResource("BoxMesh_0jfuq")
+surface_material_override/0 = SubResource("StandardMaterial3D_0jfuq")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="structures/StaticBody3D2" unique_id=1684278764]
+shape = SubResource("BoxShape3D_kn0fm")
+
+[node name="Freight1_mtl" type="MeshInstance3D" parent="structures" unique_id=548515745]
 transform = Transform3D(2.5775003, 0, 1.2622968, 0, 2.8700001, 0, -1.2622968, 0, 2.5775003, 9.5051775, 3.8550262, 14.7185545)
 mesh = ExtResource("3_vm3q4")

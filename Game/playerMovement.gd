@@ -43,12 +43,14 @@ func _physics_process(delta: float):
 		linear_velocity.y = JUMP_POWER
 		
 	if Input.is_action_pressed("crouch"):
-		print("crouching")
+		standCollide.disabled = true
+		crouchCollide.disabled = false
+		groundCast.target_position.y = -1
 	else:
-		print("not crouching")
+		standCollide.disabled = false
+		crouchCollide.disabled = true
+		groundCast.target_position.y = -2
 		
-		
-	
 	if onGround():
 		accelerate(wish_dir, MAX_SPEED, ACCELERATION, delta)
 	else:
