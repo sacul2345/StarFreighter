@@ -21,15 +21,13 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		camera.rotation.y -= event.relative.x * SENSITIVTY
 		camera.rotation.x -= event.relative.y * SENSITIVTY
-		camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-90), deg_to_rad(90))
+		camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-89), deg_to_rad(89))
 
 func _physics_process(delta: float):
 	if onGround():
 		applyFriction(delta)
 		
 	var inputVector = Input.get_vector("left","right","backward","forward")
-	#if inputVector == Vector2.ZERO:
-		#return
 	
 	var forward = -camera.global_basis.z
 	forward.y = 0
@@ -47,19 +45,23 @@ func _physics_process(delta: float):
 	if Input.is_action_pressed("crouch"):
 		standCollide.disabled = true
 		crouchCollide.disabled = false
-		groundCast.target_position.y = -1
+		groundCast.position.y = 0
 	else:
 		standCollide.disabled = false
 		crouchCollide.disabled = true
-		groundCast.target_position.y = -2
+		groundCast.position.y = -.5
 		
 	if wish_dir != Vector3.ZERO:
 		if onGround():
 			accelerate(wish_dir, MAX_SPEED, ACCELERATION, delta)
 		else:
 			accelerate(wish_dir, MAX_SPEED, AIR_ACCEL, delta)
-			
-	debugMarker.global_position = groundCast.get_collision_point(0)
+	
+	if groundCast.is_colliding():
+		debugMarker.visible = true
+		debugMarker.global_position = groundCast.get_collision_point(0)
+	else:
+		debugMarker.visible = false
 
 func accelerate(wishDir: Vector3, wishSpeed: float, accel: float, delta: float):
 	

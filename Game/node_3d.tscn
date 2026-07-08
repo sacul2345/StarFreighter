@@ -122,8 +122,9 @@ current = true
 [node name="CanvasLayer" parent="Player/RigidBody3D/PlayerView" unique_id=425049810 instance=ExtResource("2_vm3q4")]
 
 [node name="ShapeCast3D" type="ShapeCast3D" parent="Player/RigidBody3D" unique_id=1498570702]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 shape = SubResource("SphereShape3D_0jfuq")
+target_position = Vector3(0, 0, 0)
 
 [node name="DebugMarker" type="MeshInstance3D" parent="Player/RigidBody3D" unique_id=933485232]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
