@@ -8,9 +8,11 @@ extends RigidBody3D
 @export var JUMP_POWER : float
 
 @export var camera : Camera3D
-@export var groundCast : RayCast3D
+@export var groundCast : ShapeCast3D
 @export var standCollide : CollisionShape3D
 @export var crouchCollide : CollisionShape3D
+
+@export var debugMarker : MeshInstance3D
 
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -51,10 +53,13 @@ func _physics_process(delta: float):
 		crouchCollide.disabled = true
 		groundCast.target_position.y = -2
 		
-	if onGround():
-		accelerate(wish_dir, MAX_SPEED, ACCELERATION, delta)
-	else:
-		accelerate(wish_dir, MAX_SPEED, AIR_ACCEL, delta)
+	if wish_dir != Vector3.ZERO:
+		if onGround():
+			accelerate(wish_dir, MAX_SPEED, ACCELERATION, delta)
+		else:
+			accelerate(wish_dir, MAX_SPEED, AIR_ACCEL, delta)
+			
+	debugMarker.global_position = groundCast.get_collision_point(0)
 
 func accelerate(wishDir: Vector3, wishSpeed: float, accel: float, delta: float):
 	
@@ -75,7 +80,7 @@ func applyFriction(delta):
 	var horizontalVelocity = Vector3(linear_velocity.x,0,linear_velocity.z)
 	
 	var speed = horizontalVelocity.length()
-	if speed < 0.1:
+	if speed < 0:
 		return
 	
 	var damp = speed * FRICTION * delta
@@ -87,4 +92,14 @@ func applyFriction(delta):
 	linear_velocity.z = horizontalVelocity.z
 
 func onGround() -> bool:
-	return groundCast.is_colliding()
+	var surfaceNormal : Vector3
+	var slopeAngle : float
+	
+	if groundCast.is_colliding():
+		surfaceNormal = groundCast.get_collision_normal(0)
+		slopeAngle = rad_to_deg(surfaceNormal.angle_to(Vector3.UP))
+		if slopeAngle < 30 && groundCast.is_colliding():
+			return true
+		else:
+			return false
+	return false

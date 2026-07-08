@@ -18,12 +18,23 @@ texture_filter = 0
 [sub_resource type="PlaneMesh" id="PlaneMesh_cbi2t"]
 material = SubResource("StandardMaterial3D_xh10m")
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_vm3q4"]
+friction = 0.0
+
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_0jfuq"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kn0fm"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_litse"]
 height = 1.0098877
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_0jfuq"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cbi2t"]
+albedo_color = Color(0.05754622, 0.23671353, 0.11486957, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_kn0fm"]
+material = SubResource("StandardMaterial3D_cbi2t")
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cbi2t"]
 sky_curve = 0.011148761
@@ -67,34 +78,35 @@ shape = SubResource("BoxShape3D_2x3h7")
 mesh = SubResource("PlaneMesh_cbi2t")
 
 [node name="Player" type="Node3D" parent="." unique_id=2072259388]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3052027, 1.7440975)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2220044, 1.7440975)
 metadata/_edit_group_ = true
 
-[node name="RigidBody3D" type="RigidBody3D" parent="Player" unique_id=602719379 node_paths=PackedStringArray("camera", "groundCast", "standCollide", "crouchCollide")]
+[node name="RigidBody3D" type="RigidBody3D" parent="Player" unique_id=602719379 node_paths=PackedStringArray("camera", "groundCast", "standCollide", "crouchCollide", "debugMarker")]
 physics_interpolation_mode = 1
 axis_lock_angular_x = true
 axis_lock_angular_y = true
 axis_lock_angular_z = true
+mass = 70.0
+physics_material_override = SubResource("PhysicsMaterial_vm3q4")
 gravity_scale = 1.5
 script = ExtResource("2_xh10m")
 SENSITIVTY = 0.003
 ACCELERATION = 10.0
-MAX_SPEED = 15.0
-AIR_ACCEL = 1.0
-FRICTION = 8.0
+MAX_SPEED = 10.0
+AIR_ACCEL = 0.01
+FRICTION = 10.0
 JUMP_POWER = 5.0
 camera = NodePath("PlayerView")
-groundCast = NodePath("GroundCast")
+groundCast = NodePath("ShapeCast3D")
 standCollide = NodePath("Standing")
 crouchCollide = NodePath("Crouching")
+debugMarker = NodePath("DebugMarker")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Player/RigidBody3D" unique_id=2139064305]
-visible = false
 layers = 512
 mesh = SubResource("CapsuleMesh_0jfuq")
 
 [node name="Standing" type="CollisionShape3D" parent="Player/RigidBody3D" unique_id=1134784364]
-visible = false
 shape = SubResource("CapsuleShape3D_kn0fm")
 
 [node name="Crouching" type="CollisionShape3D" parent="Player/RigidBody3D" unique_id=1344202032]
@@ -102,15 +114,20 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.49957275, 0)
 shape = SubResource("CapsuleShape3D_litse")
 
 [node name="PlayerView" type="Camera3D" parent="Player/RigidBody3D" unique_id=257419934]
+physics_interpolation_mode = 2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 cull_mask = 1048063
 current = true
 
 [node name="CanvasLayer" parent="Player/RigidBody3D/PlayerView" unique_id=425049810 instance=ExtResource("2_vm3q4")]
 
-[node name="GroundCast" type="RayCast3D" parent="Player/RigidBody3D" unique_id=1572890444]
+[node name="ShapeCast3D" type="ShapeCast3D" parent="Player/RigidBody3D" unique_id=1498570702]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-target_position = Vector3(0, -2, 0)
+shape = SubResource("SphereShape3D_0jfuq")
+
+[node name="DebugMarker" type="MeshInstance3D" parent="Player/RigidBody3D" unique_id=933485232]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+mesh = SubResource("SphereMesh_kn0fm")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=803477523]
 environment = SubResource("Environment_0jfuq")
@@ -132,6 +149,17 @@ mesh = SubResource("BoxMesh_0jfuq")
 surface_material_override/0 = SubResource("StandardMaterial3D_0jfuq")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="structures/StaticBody3D" unique_id=716900663]
+shape = SubResource("BoxShape3D_kn0fm")
+
+[node name="StaticBody3D3" type="StaticBody3D" parent="structures" unique_id=1097744441]
+transform = Transform3D(-2.4692662e-07, -1.058156, -1.1121997e-06, -5.6490226, 4.625347e-08, 0, -2.158701e-14, -9.250694e-08, 12.722082, -12.63074, 4.1721144, -26.163136)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="structures/StaticBody3D3" unique_id=1369184767]
+mesh = SubResource("BoxMesh_0jfuq")
+surface_material_override/0 = SubResource("StandardMaterial3D_0jfuq")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="structures/StaticBody3D3" unique_id=1485341302]
+transform = Transform3D(0.99999857, 8.881785e-16, 0, 1.2789769e-13, 1, 0, -1.0587912e-21, 0, 1, 0, 0, 0)
 shape = SubResource("BoxShape3D_kn0fm")
 
 [node name="StaticBody3D2" type="StaticBody3D" parent="structures" unique_id=1658482156]
